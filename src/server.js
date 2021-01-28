@@ -1,15 +1,34 @@
 const express = require('express');
+const fs = require("fs");
+const path = require('path');
 
 const app = express();
+const public_directory = path.join(__dirname, "../public");
+console.log(public_directory);
 
 app.use(express.json());
+app.use(express.static(public_directory));
 
 
-app.get("/", (req, res) => {
-    //do something
-    console.log("Logging something");
-    res.send("Hello World");
-});
+//middleware functions
+// const myFunction = ( req, res, next) => {
+//     console.log("this happens first");
+//     res.query.random= "something random";
+//     next()
+// };
+
+// const myOtherFunction = (req, res, next) => {
+//     console.log("this happens second");
+//     res.query.morestuff = "something else";
+//     next();
+// };
+
+// app.get("/", myFunction, myOtherFunction, (req, res) => {
+//     //do something
+//     console.log("...then running controller");
+//     console.log(req.query);
+//     res.send("Hello World");
+// });
 
 app.get("/data", (req, res) => {
     console.log(req.query);
@@ -53,7 +72,12 @@ app.post("/dog/details", (req, res) =>{
     res.send({data: req.body});
 });
 
-
+//Challenge: save JSON data to tasks.txt file and send back a 'success' message
+app.post("/task", (req, res) =>{
+    console.log(req.body);
+    fs.writeFileSync("src/tasks.txt", req.body.task);
+    res.send("Success");
+});
 
 
 
